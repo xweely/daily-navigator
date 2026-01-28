@@ -7,7 +7,7 @@
     <style>
         body { 
             margin: 0; 
-            background: #90EE90; 
+            background: #B2C2B2; /* Muted, relaxing Sage Green */
             color: #000; 
             font-family: sans-serif; 
             height: 100vh; 
@@ -15,16 +15,19 @@
             flex-direction: column;
             user-select: none; 
         }
-        /* Header section stays at the top */
-        #header {
-            padding-top: 20px;
+        /* Header section with rounded rectangle */
+        #header-container {
+            margin: 20px auto 0;
+            background: rgba(0, 0, 0, 0.05);
+            padding: 10px 25px;
+            border-radius: 20px;
             text-align: center;
-            flex-shrink: 0;
+            border: 1px solid rgba(0, 0, 0, 0.1);
         }
-        #date-display { font-size: 1.1rem; font-weight: bold; opacity: 0.7; }
-        #time-display { font-size: 2.2rem; font-weight: 900; margin-top: 5px; }
+        #date-display { font-size: 1rem; font-weight: bold; opacity: 0.6; }
+        #time-display { font-size: 2rem; font-weight: 900; }
 
-        /* Content section stays perfectly centered */
+        /* Centered content */
         #content {
             flex-grow: 1;
             display: flex;
@@ -32,16 +35,16 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            padding-bottom: 60px; /* Offset for the hint text */
+            padding-bottom: 80px;
         }
-        #step-info { font-size: 1.4rem; font-weight: bold; opacity: 0.6; text-transform: uppercase; letter-spacing: 1px; }
+        #step-info { font-size: 1.4rem; font-weight: bold; opacity: 0.5; text-transform: uppercase; }
         #task { font-size: 3.8rem; font-weight: 900; margin: 15px 25px; line-height: 1.1; }
         
-        #hint { position: fixed; bottom: 30px; width: 100%; text-align: center; font-weight: bold; opacity: 0.4; font-size: 0.9rem; }
+        #hint { position: fixed; bottom: 30px; width: 100%; text-align: center; font-weight: bold; opacity: 0.3; font-size: 0.9rem; }
     </style>
 </head>
 <body onclick="nextStep()">
-    <div id="header">
+    <div id="header-container">
         <div id="date-display">0000-00-00 (-)</div>
         <div id="time-display">00:00 AM</div>
     </div>
@@ -68,25 +71,19 @@
         ];
         
         const standardRecovery = ["Drink water", "Neck exercise", "Close eyes and Breathe"];
-        const defaultSteps = ["Drink water", "Neck exercise", "Close eyes and Breathe"];
-        
-        let currentSteps = [];
+        let mainSteps = [];
+        let recoverySteps = [];
         let index = 0;
 
         function updateDateTime() {
             const now = new Date();
             const days = ['日', '一', '二', '三', '四', '五', '六'];
-            const dateStr = now.getFullYear() + '-' + 
-                            String(now.getMonth() + 1).padStart(2, '0') + '-' + 
-                            String(now.getDate()).padStart(2, '0') + 
-                            ' (' + days[now.getDay()] + ')';
-            document.getElementById('date-display').innerText = dateStr;
+            document.getElementById('date-display').innerText = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} (${days[now.getDay()]})`;
 
             let hours = now.getHours();
-            const minutes = String(now.getMinutes()).padStart(2, '0');
             const ampm = hours >= 12 ? 'PM' : 'AM';
             hours = hours % 12 || 12;
-            document.getElementById('time-display').innerText = hours + ':' + minutes + ' ' + ampm;
+            document.getElementById('time-display').innerText = `${hours}:${String(now.getMinutes()).padStart(2, '0')} ${ampm}`;
         }
 
         function init() {
@@ -96,35 +93,41 @@
             const found = routines.find(r => currentTime >= r.start && currentTime <= r.end);
             
             if (found) {
-                // Keep morning routine as is, otherwise add recovery steps if missing
+                mainSteps = [...found.steps];
+                // Morning routine doesn't get recovery added
                 if (found.start === "00:00") {
-                    currentSteps = found.steps;
+                    recoverySteps = [];
                 } else {
-                    currentSteps = [...found.steps];
-                    standardRecovery.forEach(step => {
-                        if (!currentSteps.includes(step)) {
-                            currentSteps.push(step);
-                        }
-                    });
+                    // Only add recovery steps that aren't already in the main list
+                    recoverySteps = standardRecovery.filter(s => !mainSteps.includes(s));
                 }
             } else {
-                currentSteps = defaultSteps;
+                mainSteps = ["Drink water", "Neck exercise"];
+                recoverySteps = ["Close eyes and Breathe"];
             }
+            index = 0;
             render();
         }
 
         function render() {
-            if (index < currentSteps.length) {
-                document.getElementById('task').innerText = currentSteps[index];
-                document.getElementById('step-info').innerText = `Step ${index + 1} of ${currentSteps.length}`;
+            const totalMain = mainSteps.length;
+            const currentTask = document.getElementById('task');
+            const currentInfo = document.getElementById('step-info');
+
+            if (index < totalMain) {
+                currentInfo.innerText = `Step ${index + 1} of ${totalMain}`;
+                currentTask.innerText = mainSteps[index];
+            } else if (index < (totalMain + recoverySteps.length)) {
+                currentInfo.innerText = "Daily Reminder";
+                currentTask.innerText = recoverySteps[index - totalMain];
             } else {
-                document.getElementById('task').innerText = "All Done";
-                document.getElementById('step-info').innerText = "Rest";
+                currentInfo.innerText = "Finished";
+                currentTask.innerText = "Rest Now";
             }
         }
 
         function nextStep() {
-            if (index < currentSteps.length) { 
+            if (index < (mainSteps.length + recoverySteps.length)) { 
                 index++; 
                 render(); 
                 if (navigator.vibrate) navigator.vibrate(50); 
@@ -134,7 +137,7 @@
             }
         }
 
-        setInterval(updateDateTime, 10000);
+            setInterval(updateDateTime, 10000);
         init();
     </script>
 </body>
