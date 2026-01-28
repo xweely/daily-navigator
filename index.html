@@ -7,7 +7,7 @@
     <style>
         body { 
             margin: 0; 
-            background: #B2C2B2; /* Muted, relaxing Sage Green */
+            background: #D0E8D0; /* Soft Seafoam - Middle ground brightness */
             color: #000; 
             font-family: sans-serif; 
             height: 100vh; 
@@ -15,19 +15,18 @@
             flex-direction: column;
             user-select: none; 
         }
-        /* Header section with rounded rectangle */
+        /* Subdued header container */
         #header-container {
             margin: 20px auto 0;
-            background: rgba(0, 0, 0, 0.05);
-            padding: 10px 25px;
-            border-radius: 20px;
+            background: rgba(0, 0, 0, 0.03);
+            padding: 8px 20px;
+            border-radius: 15px;
             text-align: center;
-            border: 1px solid rgba(0, 0, 0, 0.1);
         }
-        #date-display { font-size: 1rem; font-weight: bold; opacity: 0.6; }
-        #time-display { font-size: 2rem; font-weight: 900; }
+        #date-display { font-size: 0.9rem; font-weight: bold; opacity: 0.5; }
+        #time-display { font-size: 1.8rem; font-weight: normal; opacity: 0.7; margin-top: 2px; }
 
-        /* Centered content */
+        /* Centered step content */
         #content {
             flex-grow: 1;
             display: flex;
@@ -37,10 +36,10 @@
             text-align: center;
             padding-bottom: 80px;
         }
-        #step-info { font-size: 1.4rem; font-weight: bold; opacity: 0.5; text-transform: uppercase; }
+        #step-info { font-size: 1.3rem; font-weight: bold; opacity: 0.4; text-transform: uppercase; min-height: 1.5rem; }
         #task { font-size: 3.8rem; font-weight: 900; margin: 15px 25px; line-height: 1.1; }
         
-        #hint { position: fixed; bottom: 30px; width: 100%; text-align: center; font-weight: bold; opacity: 0.3; font-size: 0.9rem; }
+        #hint { position: fixed; bottom: 30px; width: 100%; text-align: center; font-weight: bold; opacity: 0.2; font-size: 0.8rem; }
     </style>
 </head>
 <body onclick="nextStep()">
@@ -94,13 +93,7 @@
             
             if (found) {
                 mainSteps = [...found.steps];
-                // Morning routine doesn't get recovery added
-                if (found.start === "00:00") {
-                    recoverySteps = [];
-                } else {
-                    // Only add recovery steps that aren't already in the main list
-                    recoverySteps = standardRecovery.filter(s => !mainSteps.includes(s));
-                }
+                recoverySteps = (found.start === "00:00") ? [] : standardRecovery.filter(s => !mainSteps.includes(s));
             } else {
                 mainSteps = ["Drink water", "Neck exercise"];
                 recoverySteps = ["Close eyes and Breathe"];
@@ -118,11 +111,11 @@
                 currentInfo.innerText = `Step ${index + 1} of ${totalMain}`;
                 currentTask.innerText = mainSteps[index];
             } else if (index < (totalMain + recoverySteps.length)) {
-                currentInfo.innerText = "Daily Reminder";
+                currentInfo.innerText = ""; // Leave blank as requested
                 currentTask.innerText = recoverySteps[index - totalMain];
             } else {
-                currentInfo.innerText = "Finished";
-                currentTask.innerText = "Rest Now";
+                currentInfo.innerText = "";
+                currentTask.innerText = "All Done"; // Restored previous ending
             }
         }
 
@@ -137,7 +130,7 @@
             }
         }
 
-            setInterval(updateDateTime, 10000);
+        setInterval(updateDateTime, 10000);
         init();
     </script>
 </body>
