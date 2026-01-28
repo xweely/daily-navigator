@@ -7,7 +7,7 @@
     <style>
         body { 
             margin: 0; 
-            background: #D0E8D0; /* Soft Seafoam - Middle ground brightness */
+            background: #E8F5E8; /* Brighter, clean Pale Mint */
             color: #000; 
             font-family: sans-serif; 
             height: 100vh; 
@@ -15,18 +15,18 @@
             flex-direction: column;
             user-select: none; 
         }
-        /* Subdued header container */
+        /* Subdued header - lowered opacity to reduce distraction */
         #header-container {
-            margin: 20px auto 0;
-            background: rgba(0, 0, 0, 0.03);
-            padding: 8px 20px;
-            border-radius: 15px;
+            margin: 15px auto 0;
+            background: rgba(0, 0, 0, 0.02);
+            padding: 5px 15px;
+            border-radius: 12px;
             text-align: center;
         }
-        #date-display { font-size: 0.9rem; font-weight: bold; opacity: 0.5; }
-        #time-display { font-size: 1.8rem; font-weight: normal; opacity: 0.7; margin-top: 2px; }
+        #date-display { font-size: 0.8rem; font-weight: bold; opacity: 0.3; }
+        #time-display { font-size: 1.6rem; font-weight: 300; opacity: 0.4; margin-top: 1px; }
 
-        /* Centered step content */
+        /* Centered content - moved 20% higher */
         #content {
             flex-grow: 1;
             display: flex;
@@ -34,12 +34,12 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            padding-bottom: 80px;
+            padding-bottom: 20vh; /* This pushes the content 20% higher than center */
         }
-        #step-info { font-size: 1.3rem; font-weight: bold; opacity: 0.4; text-transform: uppercase; min-height: 1.5rem; }
-        #task { font-size: 3.8rem; font-weight: 900; margin: 15px 25px; line-height: 1.1; }
+        #step-info { font-size: 1.3rem; font-weight: bold; opacity: 0.3; text-transform: uppercase; min-height: 1.5rem; }
+        #task { font-size: 3.8rem; font-weight: 900; margin: 10px 25px; line-height: 1.1; letter-spacing: -1px; }
         
-        #hint { position: fixed; bottom: 30px; width: 100%; text-align: center; font-weight: bold; opacity: 0.2; font-size: 0.8rem; }
+        #hint { position: fixed; bottom: 20px; width: 100%; text-align: center; font-weight: bold; opacity: 0.15; font-size: 0.7rem; }
     </style>
 </head>
 <body onclick="nextStep()">
@@ -111,11 +111,11 @@
                 currentInfo.innerText = `Step ${index + 1} of ${totalMain}`;
                 currentTask.innerText = mainSteps[index];
             } else if (index < (totalMain + recoverySteps.length)) {
-                currentInfo.innerText = ""; // Leave blank as requested
+                currentInfo.innerText = ""; 
                 currentTask.innerText = recoverySteps[index - totalMain];
             } else {
                 currentInfo.innerText = "";
-                currentTask.innerText = "All Done"; // Restored previous ending
+                currentTask.innerText = "All Done"; 
             }
         }
 
