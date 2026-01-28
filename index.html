@@ -17,7 +17,7 @@
             overflow: hidden;
         }
 
-        /* Content section - pushed 30% higher than center */
+        /* Content section - adjusted to 25% higher than center (5% lower than before) */
         #content {
             flex-grow: 1;
             display: flex;
@@ -25,21 +25,25 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            padding-bottom: 30vh; 
+            padding-bottom: 25vh; 
         }
         #step-info { font-size: 1.4rem; font-weight: bold; opacity: 0.25; text-transform: uppercase; min-height: 1.5rem; }
         #task { font-size: 4.5rem; font-weight: 900; margin: 10px 20px; line-height: 1.1; letter-spacing: -1.5px; }
         
-        /* Footer section for Date and Time */
+        /* Footer section for Date and Time in a single row */
         #footer-container {
             position: fixed;
             bottom: 40px;
             width: 100%;
-            text-align: center;
+            display: flex;
+            justify-content: center;
+            gap: 15px; /* Space between date and time */
             pointer-events: none;
+            font-weight: bold;
+            opacity: 0.25;
         }
-        #date-display { font-size: 0.8rem; font-weight: bold; opacity: 0.2; }
-        #time-display { font-size: 1.4rem; font-weight: 300; opacity: 0.25; margin-top: 2px; }
+        #date-display { font-size: 0.9rem; }
+        #time-display { font-size: 0.9rem; font-weight: normal; }
 
         #hint { position: fixed; bottom: 15px; width: 100%; text-align: center; font-weight: bold; opacity: 0.1; font-size: 0.7rem; }
     </style>
