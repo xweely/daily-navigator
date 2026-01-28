@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Navigator</title>
+    <style>
+        body { margin: 0; background: #000; color: #fff; font-family: sans-serif; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; user-select: none; }
+        #step-info { font-size: 1.2rem; opacity: 0.5; margin-bottom: 10px; }
+        #task { font-size: 3.5rem; font-weight: bold; margin: 20px; color: #4CAF50; }
+        #hint { position: fixed; bottom: 40px; opacity: 0.3; }
+    </style>
+</head>
+<body onclick="nextStep()">
+    <div id="step-info">Step 1</div>
+    <div id="task">Loading...</div>
+    <div id="hint">Tap anywhere to continue</div>
+
+    <script>
+        const routines = [
+            { start: "00:00", end: "12:00", steps: ["Drink warm water", "Take Duspatalin", "Milk, chia seed mixture", "Toilet", "Exercise", "Close eyes and breathe"] },
+            { start: "13:00", end: "14:30", steps: ["Take Visanne", "Drink water", "Neck exercise"] },
+            { start: "15:30", end: "16:40", steps: ["Drink milk"] },
+            { start: "16:41", end: "17:30", steps: ["Drink water", "Lie Down Exercise", "Left leg bend", "Child's pose", "Cat's stretch"] },
+            { start: "17:31", end: "18:14", steps: ["Back exercise", "Walk in park"] },
+            { start: "18:15", end: "19:00", steps: ["Drink water", "Take Duspatalin"] },
+            { start: "19:30", end: "20:30", steps: ["Drink Apple cider water"] },
+            { start: "20:31", end: "21:20", steps: ["Bath"] },
+            { start: "21:21", end: "22:00", steps: ["Drink water", "Prepare hot water", "Eat a bit"] },
+            { start: "22:01", end: "23:30", steps: ["On bed"] }
+        ];
+        const defaultSteps = ["Drink water", "Neck exercise"];
+        let currentSteps = [];
+        let index = 0;
+
+        function init() {
+            const now = new Date();
+            const time = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
+            const found = routines.find(r => time >= r.start && time <= r.end);
+            currentSteps = found ? found.steps : defaultSteps;
+            render();
+        }
+
+        function render() {
+            if (index < currentSteps.length) {
+                document.getElementById('task').innerText = currentSteps[index];
+                document.getElementById('step-info').innerText = `Step ${index + 1} of ${currentSteps.length}`;
+            } else {
+                document.getElementById('task').innerText = "All Done";
+                document.getElementById('step-info').innerText = "Rest";
+            }
+        }
+
+        function nextStep() {
+            if (index < currentSteps.length) { index++; render(); if (navigator.vibrate) navigator.vibrate(50); }
+            else { index = 0; init(); }
+        }
+        init();
+    </script>
+</body>
+</html>
