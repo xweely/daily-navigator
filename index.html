@@ -7,7 +7,7 @@
     <style>
         body { 
             margin: 0; 
-            background: #90EE90; /* Brighter green as requested */
+            background: rgba(144, 238, 144, 0.7); /* LightGreen with 70% opacity */
             color: #000; 
             font-family: sans-serif; 
             height: 100vh; 
@@ -26,7 +26,7 @@
             gap: 15px;
             pointer-events: none;
             font-weight: bold;
-            opacity: 0.3; /* Subtle to avoid distraction */
+            opacity: 0.3; 
         }
         #date-display, #time-display { font-size: 0.9rem; }
 
@@ -114,18 +114,16 @@
             } else if (index < (totalMain + recoverySteps.length)) {
                 currentInfo.innerText = ""; 
                 currentTask.innerText = recoverySteps[index - totalMain];
-            } else {
-                currentInfo.innerText = "";
-                currentTask.innerText = "Rest"; 
             }
         }
 
         function nextStep() {
-            if (index < (mainSteps.length + recoverySteps.length)) { 
+            if (index < (mainSteps.length + recoverySteps.length - 1)) { 
                 index++; 
                 render(); 
                 if (navigator.vibrate) navigator.vibrate(50); 
             } else { 
+                // Loop back to start immediately instead of showing "Rest"
                 index = 0; 
                 init(); 
             }
