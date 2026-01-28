@@ -7,26 +7,17 @@
     <style>
         body { 
             margin: 0; 
-            background: #E8F5E8; /* Brighter, clean Pale Mint */
+            background: #E8F5E8; 
             color: #000; 
             font-family: sans-serif; 
             height: 100vh; 
             display: flex; 
             flex-direction: column;
             user-select: none; 
+            overflow: hidden;
         }
-        /* Subdued header - lowered opacity to reduce distraction */
-        #header-container {
-            margin: 15px auto 0;
-            background: rgba(0, 0, 0, 0.02);
-            padding: 5px 15px;
-            border-radius: 12px;
-            text-align: center;
-        }
-        #date-display { font-size: 0.8rem; font-weight: bold; opacity: 0.3; }
-        #time-display { font-size: 1.6rem; font-weight: 300; opacity: 0.4; margin-top: 1px; }
 
-        /* Centered content - moved 20% higher */
+        /* Content section - pushed 30% higher than center */
         #content {
             flex-grow: 1;
             display: flex;
@@ -34,30 +25,42 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            padding-bottom: 20vh; /* This pushes the content 20% higher than center */
+            padding-bottom: 30vh; 
         }
-        #step-info { font-size: 1.3rem; font-weight: bold; opacity: 0.3; text-transform: uppercase; min-height: 1.5rem; }
-        #task { font-size: 3.8rem; font-weight: 900; margin: 10px 25px; line-height: 1.1; letter-spacing: -1px; }
+        #step-info { font-size: 1.4rem; font-weight: bold; opacity: 0.25; text-transform: uppercase; min-height: 1.5rem; }
+        #task { font-size: 4.5rem; font-weight: 900; margin: 10px 20px; line-height: 1.1; letter-spacing: -1.5px; }
         
-        #hint { position: fixed; bottom: 20px; width: 100%; text-align: center; font-weight: bold; opacity: 0.15; font-size: 0.7rem; }
+        /* Footer section for Date and Time */
+        #footer-container {
+            position: fixed;
+            bottom: 40px;
+            width: 100%;
+            text-align: center;
+            pointer-events: none;
+        }
+        #date-display { font-size: 0.8rem; font-weight: bold; opacity: 0.2; }
+        #time-display { font-size: 1.4rem; font-weight: 300; opacity: 0.25; margin-top: 2px; }
+
+        #hint { position: fixed; bottom: 15px; width: 100%; text-align: center; font-weight: bold; opacity: 0.1; font-size: 0.7rem; }
     </style>
 </head>
 <body onclick="nextStep()">
-    <div id="header-container">
-        <div id="date-display">0000-00-00 (-)</div>
-        <div id="time-display">00:00 AM</div>
-    </div>
 
     <div id="content">
         <div id="step-info">Step 1</div>
         <div id="task">Loading...</div>
     </div>
 
+    <div id="footer-container">
+        <div id="date-display">0000-00-00 (-)</div>
+        <div id="time-display">00:00 AM</div>
+    </div>
+
     <div id="hint">Tap anywhere to continue</div>
 
     <script>
         const routines = [
-            { start: "00:00", end: "12:00", steps: ["Drink warm water", "Take Duspatalin", "Milk, chia seed mixture", "Toilet", "Exercise", "Close eyes and breathe"] },
+            { start: "00:00", end: "12:00", steps: ["Drink warm water", "Take Duspatalin", "Milk, chia seed mixture", "Toilet", "Exercise", "Breathe"] },
             { start: "13:00", end: "14:30", steps: ["Take Visanne", "Drink water", "Neck exercise"] },
             { start: "15:30", end: "16:40", steps: ["Drink milk"] },
             { start: "16:41", end: "17:30", steps: ["Drink water", "Lie Down Exercise", "Left leg bend", "Child's pose", "Cat's stretch"] },
@@ -69,7 +72,7 @@
             { start: "22:01", end: "23:30", steps: ["On bed"] }
         ];
         
-        const standardRecovery = ["Drink water", "Neck exercise", "Close eyes and Breathe"];
+        const standardRecovery = ["Drink water", "Neck exercise", "Breathe"];
         let mainSteps = [];
         let recoverySteps = [];
         let index = 0;
@@ -88,7 +91,7 @@
         function init() {
             updateDateTime();
             const now = new Date();
-            const currentTime = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
+            const currentTime = String(now.getHours()).padStart(2, '0') + ":" + String(now.getMinutes()).padStart(2, '0');
             const found = routines.find(r => currentTime >= r.start && currentTime <= r.end);
             
             if (found) {
@@ -96,7 +99,7 @@
                 recoverySteps = (found.start === "00:00") ? [] : standardRecovery.filter(s => !mainSteps.includes(s));
             } else {
                 mainSteps = ["Drink water", "Neck exercise"];
-                recoverySteps = ["Close eyes and Breathe"];
+                recoverySteps = ["Breathe"];
             }
             index = 0;
             render();
@@ -115,7 +118,7 @@
                 currentTask.innerText = recoverySteps[index - totalMain];
             } else {
                 currentInfo.innerText = "";
-                currentTask.innerText = "All Done"; 
+                currentTask.innerText = "Rest"; 
             }
         }
 
