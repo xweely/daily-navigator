@@ -7,8 +7,8 @@
     <style>
         body { 
             margin: 0; 
-            background: #00A3A3; /* Brighter version of your teal keyboard color */
-            color: #000; /* High-contrast black text */
+            background: #CCFF00; /* Bright Yellow-Green / Lime */
+            color: #000; 
             font-family: sans-serif; 
             height: 100vh; 
             display: flex; 
@@ -30,10 +30,55 @@
         
         #footer-container {
             position: fixed;
-            bottom: 60px; /* Moved up significantly to be visible in full screen */
+            bottom: 80px; /* High enough to stay visible in Via full-screen */
             width: 100%;
             display: flex;
             justify-content: center;
+            gap: 15px;
+            pointer-events: none;
+            font-weight: bold;
+            opacity: 0.6;
+            z-index: 999;
+        }
+        #date-display, #time-display { font-size: 1rem; }
+    </style>
+</head>
+<body onclick="nextStep()">
+    <div id="content">
+        <div id="step-info">Step 1</div>
+        <div id="task">Loading...</div>
+    </div>
+
+    <div id="footer-container">
+        <div id="date-display">0000-00-00 (-)</div>
+        <div id="time-display">00:00 AM</div>
+    </div>
+
+    <script>
+        const routines = [
+            { start: "00:00", end: "12:00", steps: ["Drink warm water", "Take Duspatalin", "Milk, chia seed mixture", "Toilet", "Exercise", "Breathe"] },
+            { start: "13:00", end: "14:30", steps: ["Take Visanne", "Drink water", "Neck exercise"] },
+            { start: "15:30", end: "16:40", steps: ["Drink milk"] },
+            { start: "16:41", end: "17:30", steps: ["Drink water", "Lie Down Exercise", "Left leg bend", "Child's pose", "Cat's stretch"] },
+            { start: "17:31", end: "18:14", steps: ["Back exercise", "Walk in park"] },
+            { start: "18:15", end: "19:00", steps: ["Drink water", "Take Duspatalin"] },
+            { start: "19:30", end: "20:30", steps: ["Drink Apple cider water"] },
+            { start: "20:31", end: "21:20", steps: ["Bath"] },
+            { start: "21:21", end: "22:00", steps: ["Drink water", "Prepare hot water", "Eat a bit"] },
+            { start: "22:01", end: "23:30", steps: ["On bed"] }
+        ];
+        
+        const recovery = ["Drink water", "Neck exercise", "Breathe"];
+        let mainSteps = [], recoverySteps = [], index = 0;
+
+        function updateTime() {
+            const now = new Date();
+            const days = ['日', '一', '二', '三', '四', '五', '六'];
+            document.getElementById('date-display').innerText = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} (${days[now.getDay()]})`;
+            let h = now.getHours();
+            const ampm = h >= 12 ? 'PM' : 'AM';
+            h = h % 12 || 12;
+            document.getElementById('time-display').innerText = `${h}:${String
             gap: 15px;
             pointer-events: none;
             font-weight: bold;
