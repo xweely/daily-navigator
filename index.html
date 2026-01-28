@@ -7,8 +7,8 @@
     <style>
         body { 
             margin: 0; 
-            background: #008080; /* Vibrant teal-green matching your keyboard/screenshot */
-            color: #fff; /* White text for better contrast on vibrant green */
+            background: #008080; /* Vibrant teal matching your keyboard screenshot */
+            color: #fff; 
             font-family: sans-serif; 
             height: 100vh; 
             display: flex; 
@@ -16,8 +16,6 @@
             user-select: none; 
             overflow: hidden;
         }
-
-        /* Content section - 25% higher than center */
         #content {
             flex-grow: 1;
             display: flex;
@@ -30,25 +28,22 @@
         #step-info { font-size: 1.4rem; font-weight: bold; opacity: 0.4; text-transform: uppercase; min-height: 1.5rem; }
         #task { font-size: 4.5rem; font-weight: 900; margin: 10px 20px; line-height: 1.1; letter-spacing: -1.5px; }
         
-        /* Footer section - Fixed position to stay visible in full screen */
         #footer-container {
             position: fixed;
-            bottom: 30px; /* Adjusted to ensure visibility in via full-screen */
+            bottom: 30px;
             width: 100%;
             display: flex;
             justify-content: center;
             gap: 15px;
             pointer-events: none;
             font-weight: bold;
-            opacity: 0.5;
+            opacity: 0.4;
             z-index: 999;
         }
-        #date-display { font-size: 0.9rem; }
-        #time-display { font-size: 0.9rem; font-weight: normal; }
+        #date-display, #time-display { font-size: 0.9rem; }
     </style>
 </head>
 <body onclick="nextStep()">
-
     <div id="content">
         <div id="step-info">Step 1</div>
         <div id="task">Loading...</div>
@@ -139,105 +134,7 @@
     </script>
 </body>
 </html>
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            gap: 15px; /* Space between date and time */
-            pointer-events: none;
-            font-weight: bold;
-            opacity: 0.25;
-        }
-        #date-display { font-size: 0.9rem; }
-        #time-display { font-size: 0.9rem; font-weight: normal; }
 
-        #hint { position: fixed; bottom: 15px; width: 100%; text-align: center; font-weight: bold; opacity: 0.1; font-size: 0.7rem; }
-    </style>
-</head>
-<body onclick="nextStep()">
-
-    <div id="content">
-        <div id="step-info">Step 1</div>
-        <div id="task">Loading...</div>
-    </div>
-
-    <div id="footer-container">
-        <div id="date-display">0000-00-00 (-)</div>
-        <div id="time-display">00:00 AM</div>
-    </div>
-
-    <div id="hint">Tap anywhere to continue</div>
-
-    <script>
-        const routines = [
-            { start: "00:00", end: "12:00", steps: ["Drink warm water", "Take Duspatalin", "Milk, chia seed mixture", "Toilet", "Exercise", "Breathe"] },
-            { start: "13:00", end: "14:30", steps: ["Take Visanne", "Drink water", "Neck exercise"] },
-            { start: "15:30", end: "16:40", steps: ["Drink milk"] },
-            { start: "16:41", end: "17:30", steps: ["Drink water", "Lie Down Exercise", "Left leg bend", "Child's pose", "Cat's stretch"] },
-            { start: "17:31", end: "18:14", steps: ["Back exercise", "Walk in park"] },
-            { start: "18:15", end: "19:00", steps: ["Drink water", "Take Duspatalin"] },
-            { start: "19:30", end: "20:30", steps: ["Drink Apple cider water"] },
-            { start: "20:31", end: "21:20", steps: ["Bath"] },
-            { start: "21:21", end: "22:00", steps: ["Drink water", "Prepare hot water", "Eat a bit"] },
-            { start: "22:01", end: "23:30", steps: ["On bed"] }
-        ];
-        
-        const standardRecovery = ["Drink water", "Neck exercise", "Breathe"];
-        let mainSteps = [];
-        let recoverySteps = [];
-        let index = 0;
-
-        function updateDateTime() {
-            const now = new Date();
-            const days = ['日', '一', '二', '三', '四', '五', '六'];
-            document.getElementById('date-display').innerText = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} (${days[now.getDay()]})`;
-
-            let hours = now.getHours();
-            const ampm = hours >= 12 ? 'PM' : 'AM';
-            hours = hours % 12 || 12;
-            document.getElementById('time-display').innerText = `${hours}:${String(now.getMinutes()).padStart(2, '0')} ${ampm}`;
-        }
-
-        function init() {
-            updateDateTime();
-            const now = new Date();
-            const currentTime = String(now.getHours()).padStart(2, '0') + ":" + String(now.getMinutes()).padStart(2, '0');
-            const found = routines.find(r => currentTime >= r.start && currentTime <= r.end);
-            
-            if (found) {
-                mainSteps = [...found.steps];
-                recoverySteps = (found.start === "00:00") ? [] : standardRecovery.filter(s => !mainSteps.includes(s));
-            } else {
-                mainSteps = ["Drink water", "Neck exercise"];
-                recoverySteps = ["Breathe"];
-            }
-            index = 0;
-            render();
-        }
-
-        function render() {
-            const totalMain = mainSteps.length;
-            const currentTask = document.getElementById('task');
-            const currentInfo = document.getElementById('step-info');
-
-            if (index < totalMain) {
-                currentInfo.innerText = `Step ${index + 1} of ${totalMain}`;
-                currentTask.innerText = mainSteps[index];
-            } else if (index < (totalMain + recoverySteps.length)) {
-                currentInfo.innerText = ""; 
-                currentTask.innerText = recoverySteps[index - totalMain];
-            } else {
-                currentInfo.innerText = "";
-                currentTask.innerText = "Rest"; 
-            }
-        }
-
-        function nextStep() {
-            if (index < (mainSteps.length + recoverySteps.length)) { 
-                index++; 
-                render(); 
-                if (navigator.vibrate) navigator.vibrate(50); 
-            } else { 
-                index = 0; 
                 init(); 
             }
         }
